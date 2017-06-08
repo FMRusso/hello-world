@@ -2,7 +2,7 @@
 
 cd "C:\Users\b210139945\Desktop\PNAD\Pnad STATA\Sem norte rural"
 
-local anos "2009 2011 2012"
+local anos "2008 2009 2011 2012"
 foreach y in `anos' {
 
 use pesdom_`y'_stata_def,clear
@@ -10,15 +10,15 @@ use pesdom_`y'_stata_def,clear
 
 ** Posição no domicílio
 recode v0401 (1=1 "chefe de família") (2=2 "cônjuge") (3=3 "filho") (4/8=4 "outro"), gen(pdom)
-gen respons= (pdom==1)
-gen conjuge= (pdom==2)
-gen filho= (pdom==3)
-gen outro= (pdom>3)
+gen respons= (pdom==3)
+gen conjuge= (pdom==5)
+gen filho= (pdom==7)
+gen outro= (pdom>8)
 
 bysort domicilioid: egen Nfilhos=total(filho) 
 
 gen teto=.
-replace teto=832.66  if ano==1995 
+/*replace teto=832.66  if ano==1995 
 replace teto=957.56  if ano==1996
 replace teto=1031.87 if ano==1997
 replace teto=1081.50 if ano==1998
@@ -27,7 +27,7 @@ replace teto=1430.00 if ano==2001
 replace teto=1561.56 if ano==2002
 replace teto=1869.34 if ano==2003 
 replace teto=2508.72 if ano==2004
-replace teto=2668.15 if ano==2005
+replace teto=2668.15 if ano==2005*/
 replace teto=2801.82 if ano==2006   
 replace teto=2894.28 if ano==2007 
 replace teto=3038.99 if ano==2008
