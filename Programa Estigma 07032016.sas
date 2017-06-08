@@ -1,26 +1,26 @@
-Ôªø***********************************************************
+***********************************************************
 * DISOC-Rio
-* Coordena√ß√£o de mercado de trabalho
+* CoordenaÁ„o de mercado de trabalho
 
 * Programa para gerar base para projeto sobre Estigma (baseado no programa do Caxambu)
 *
-* Data de cria√ß√£o: 15/01/2014
-* Data da √∫ltima altera√ß√£o: 28/04/2014
-* Autor da √∫ltima altera√ß√£o: Alessandra Scalioni Brito
+* Data de criaÁ„o: 15/01/2014
+* Data da ˙ltima alteraÁ„o: 28/04/2014
+* Autor da ˙ltima alteraÁ„o: Alessandra Scalioni Brito
 **********************************************************;
 
-/*LIBNAME IN1 '\\sbsb2\disoc_rio\Coordena√ß√£o Trabalho\Base de dados\RAIS\Bases prim√°rias';
-LIBNAME IN  '\\sbsb2\disoc_rio\Coordena√ß√£o Trabalho\Base de dados\RAIS\Bases prim√°rias\Admitidos e desligados';
-LIBNAME IN2 '\\sbsb2\disoc_rio\BMT\RAIS\Epis√≥dios deslig';
-LIBNAME IN3 '\\sbsb2\disoc_rio\Coordena√ß√£o Trabalho\Base de dados\RAIS\Bases prim√°rias\Ativos'; 
-LIBNAME IN7 '\\sbsb2\disoc_rio\BMT\RAIS\Epis√≥dios deslig\novo';
-LIBNAME IN4 '\\sbsb2\disoc_rio\Coordena√ß√£o Trabalho\Base de dados\RAIS\Bases prim√°rias\Epis√≥dios de desligamento';*/
-LIBNAME IN6 '\\sbsb2\disoc_rio\Coordena√ß√£o Trabalho\Base de dados\RAIS\Bases prim√°rias\Epis√≥dios de desligamento\novo';
-LIBNAME IN13  '\\sbsb2\disoc_rio\Coordena√ß√£o Trabalho\Base de dados\RAIS\Bases prim√°rias\vinculos_nasc_morte';
+/*LIBNAME IN1 '\\sbsb2\disoc_rio\CoordenaÁ„o Trabalho\Base de dados\RAIS\Bases prim·rias';
+LIBNAME IN  '\\sbsb2\disoc_rio\CoordenaÁ„o Trabalho\Base de dados\RAIS\Bases prim·rias\Admitidos e desligados';
+LIBNAME IN2 '\\sbsb2\disoc_rio\BMT\RAIS\EpisÛdios deslig';
+LIBNAME IN3 '\\sbsb2\disoc_rio\CoordenaÁ„o Trabalho\Base de dados\RAIS\Bases prim·rias\Ativos'; 
+LIBNAME IN7 '\\sbsb2\disoc_rio\BMT\RAIS\EpisÛdios deslig\novo';
+LIBNAME IN4 '\\sbsb2\disoc_rio\CoordenaÁ„o Trabalho\Base de dados\RAIS\Bases prim·rias\EpisÛdios de desligamento';*/
+LIBNAME IN6 '\\sbsb2\disoc_rio\CoordenaÁ„o Trabalho\Base de dados\RAIS\Bases prim·rias\EpisÛdios de desligamento\novo';
+LIBNAME IN13  '\\sbsb2\disoc_rio\CoordenaÁ„o Trabalho\Base de dados\RAIS\Bases prim·rias\vinculos_nasc_morte';
 LIBNAME IN5 '\\sbsb2\disoc_rio\BMT\RAIS\Estigma';
 LIBNAME IN8 '\\sbsb2\disoc_rio\BMT\RAIS\Estigma\Antigos e Bases Auxiliares';
 
-** colocando o emprego_medio_anual no ano seguinte de empresas que n√£o tinham essa vari√°vel (empresas emputadas via nascimento ou morte);
+** colocando o emprego_medio_anual no ano seguinte de empresas que n„o tinham essa vari·vel (empresas emputadas via nascimento ou morte);
 %macro year(A);
 data in6.vinculos_emp3&A (keep=o_cnpj emprego_medio_anual); set in13.ciclos_emp&A;
 rename cnpj=o_cnpj;
@@ -32,6 +32,8 @@ run;
 %year(2001);
 %year(2000);
 %year(1999);
+%year(1998);
+%year(1997);
 run;
 
 %macro year(A,B); *Merge;
@@ -51,19 +53,19 @@ run;
 %year(2000,1999);
 
 
-/*filtros da base prim√°ria de 2000 a 2005*************************************************;*/
+/*filtros da base prim·ria de 2000 a 2005*************************************************;*/
 %macro year(A); *Filtros;
 data in8.desligados_final3&A (compress= yes); set IN8.DESLIGADOS_FINAL3&A;
-/*s√≥ desligados (inclusive aqueles devido √† morte da empresa - caso onde o_mes_deslig=0.5)*/
-if o_mes_deslig<13; /*a base prim√°ria j√° est√° com este filtro*/
+/*sÛ desligados (inclusive aqueles devido ‡ morte da empresa - caso onde o_mes_deslig=0.5)*/
+if o_mes_deslig<13; /*a base prim·ria j· est· com este filtro*/
 
-if o_genero=1; /*s√≥ homens*/
-if 25<=o_idade1<=60; /*s√≥ adultos*/
+if o_genero=1; /*sÛ homens*/
+if 25<=o_idade1<=60; /*sÛ adultos*/
 if o_tipo_vinculo='10' or o_tipo_vinculo='15' or o_tipo_vinculo='20' or o_tipo_vinculo='25'; /*contrato com tempo indeterminado*/
 if o_horas>=30; /*mais de 30 horas de jornada*/
-if o_subsibge='25' or o_subsibge='24' or o_subsibge='26' then delete; /*tira Agr√≠cola, Adm p√∫blica e Outros*/
+if o_subsibge='25' or o_subsibge='24' or o_subsibge='26' then delete; /*tira AgrÌcola, Adm p˙blica e Outros*/
 
-/*n√£o morreu nem se aposentou*/
+/*n„o morreu nem se aposentou*/
 if o_causa_desl='0' or o_causa_desl='10' or o_causa_desl='11' or o_causa_desl='12' or o_causa_desl='20' or o_causa_desl='21'
 or o_causa_desl='30' or o_causa_desl='31' or o_causa_desl='40' or o_causa_desl='50' or o_causa_desl='99';
 
@@ -79,17 +81,17 @@ run;
 %year(2000);
 
 
-%macro year(A); *criando vari√°veis; 
+%macro year(A); *criando vari·veis; 
 data in8.desligados_final3&A (drop= emp_jan emp_fev emp_mar emp_abr emp_mai emp_jun emp_jul emp_ago emp_set emp_out emp_nov emp_dez same_cnpj o_rem_dez rem_dez_r idade_firma o_idadefirma ind_simples o_simples emp_3112 o_emp3112 reemprego_imediato erro erro2 teste); 
 set in8.desligados_final3&A;
-/**Vari√°veis para as tabula√ß√µes**/
+/**Vari·veis para as tabulaÁıes**/
 if o_cnpj=cnpj and o_cnpj ne "" and cnpj ne "" then cond_cgc=1; else cond_cgc=0; /*reemprego no mesmo cnpj*/
 if o_cbo=cbo and o_cbo ne "" and cbo ne "" then cond_ocup=1; else cond_ocup=0; /*na mesma CBO*/
 if o_subsibge=subs_ibge and o_subsibge ne "" and subs_ibge ne "" then cond_setor=1; else cond_setor=0; /*no mesmo setor*/
 
-/*Dummy se desligamento involunt√°rio*/
+/*Dummy se desligamento involunt·rio*/
 if (o_causa_desl=10 or o_causa_desl=11 or o_causa_desl=30 or o_causa_desl=31) then o_DESLIG_FIRMA=1; ELSE o_DESLIG_FIRMA=0;
-/*Dummy se o desligamento foi por morte verdadeira da firma*/ /*j√° tem na base prim√°ria*/
+/*Dummy se o desligamento foi por morte verdadeira da firma*/ /*j· tem na base prim·ria*/
 /*if o_morte_final=1 then deslig_morte=1; else deslig_morte=0; */
 
 /*Tamanho do estabelecimento */
@@ -119,7 +121,7 @@ if 0<tam<=9 then tam_estab=1;
 if 10<=tam<=99 then tam_estab=2;
 if tam>=100 then tam_estab=3;
 
-/*Mudan√ßa entre classes de tamanho*/
+/*MudanÁa entre classes de tamanho*/
 if o_tam_estab=tam_estab then cond_tam=1; else cond_tam=0; /*reemprego na mesma classe de tamanho do estabelecimento*/
 
 if o_tam_estab=1 and tam_estab=2 then mov12=1; else mov12=0;
@@ -142,7 +144,7 @@ select;
 	otherwise;											/*ignorado*/
 end;
 
-/*categ√≥rica para tempo de emprego*/
+/*categÛrica para tempo de emprego*/
 select;
 	when (o_temp_empr<12)							    f_tempo=1; /*menos de 1 ano*/
 	when (12<=o_temp_empr<36)							f_tempo=2; /*1 a 3 anos*/
@@ -150,26 +152,26 @@ select;
 	otherwise;										
 end;
 
-/**Vari√°veis da regress√£o**/
+/**Vari·veis da regress„o**/
 
-/*Diferen√ßa de tempo de emprego*/
+/*DiferenÁa de tempo de emprego*/
 if mes_adm^=. then d_temp_empr=sum(temp_empr,-o_temp_empr); else d_temp_empr=.; 
 
 /*Reemprego com contrato CLT indeterminado*/
 if tipo_vinculo^=. then do;
 if tipo_vinculo='10' or tipo_vinculo='15' or tipo_vinculo='20' or tipo_vinculo='25' then clt=1; else clt=0; end;
-/*se clt for missing √© porque n√£o foi reempregado*/
+/*se clt for missing È porque n„o foi reempregado*/
 
-/*Grau de instru√ß√£o novo*/
+/*Grau de instruÁ„o novo*/
 select;
-		when (1<=o_grau_instr1<=4)					educa='At√© 1¬∫ incomp.';
-		when (5<=o_grau_instr1<=6)					educa='At√© 2¬∫ incomp.';
-		when (7<=o_grau_instr1<=9)					educa='At√© sup. comp.';
+		when (1<=o_grau_instr1<=4)					educa='AtÈ 1∫ incomp.';
+		when (5<=o_grau_instr1<=6)					educa='AtÈ 2∫ incomp.';
+		when (7<=o_grau_instr1<=9)					educa='AtÈ sup. comp.';
 		otherwise;
 end;
 
 
-/*Se a pessoa foi reempregada, quantos meses ficou fora da formalidade*/ /*DIF J√Å TEM NA BASE*/
+/*Se a pessoa foi reempregada, quantos meses ficou fora da formalidade*/ /*DIF J¡ TEM NA BASE*/
 /*if mes_adm^=. and ano2=1 then do; 
  dif=sum(mes_adm,-o_mes_deslig)+12; end;
 if mes_adm^=. and ano2^=1 then do;
@@ -177,11 +179,11 @@ if mes_adm^=. and ano2^=1 then do;
 if o_mes_deslig=0.5 then dif=.;
 if mes_adm=99 then dif=.; */
 
-/*Dummy se re-emprego no mesmo m√™s ou m√™s seguinte*/
+/*Dummy se re-emprego no mesmo mÍs ou mÍs seguinte*/
 if dif^=. then do;
  if dif=0 or dif=1 then r_imediato=1; else r_imediato=0; end;
 
-/*Se a recontrata√ß√£o foi feita em at√© 1 ano (12 meses)*/
+/*Se a recontrataÁ„o foi feita em atÈ 1 ano (12 meses)*/
 if 0<=dif<=12 then y=1; else y=0; 
 if dif=. then y=.;
 
@@ -192,8 +194,8 @@ d_age=(2*age*dif)+dif**2; /*usa?*/
 
 /*Tempo fora da formalidade*/	
 select;
-	when(dif=0) 									tff=1; /*Menos de 1 m√™s*/
-	when(dif=1) 									tff=2; /*At√© 1 m√™s*/
+	when(dif=0) 									tff=1; /*Menos de 1 mÍs*/
+	when(dif=1) 									tff=2; /*AtÈ 1 mÍs*/
 	when(dif in (2, 3)) 							tff=3; /*2 a 3 meses*/
 	when(dif in (4, 5, 6)) 						    tff=4; /*4 a 6 meses*/
 	when(dif in (7, 8, 9, 10, 11)) 					tff=5; /*7 a 11 meses*/
@@ -201,7 +203,7 @@ select;
 		otherwise;
 	end;
 
-/*Grandes regi√µes*/
+/*Grandes regiıes*/
 select;
 	when (o_uf in ('11', '12', '13', '14', '15', '16', '17'))				gr=1; /*Norte*/
 	when (o_uf in ('21', '22', '23', '24', '25', '26', '27', '28', '29'))   gr=2; /*Nordeste*/
@@ -213,23 +215,23 @@ select;
 
 SELECT;
 WHEN (1<=o_subsibge<=13)                        setor=1; /*industria*/
-WHEN (o_subsibge=15)                         setor=3; /*constru√ß√£o*/
+WHEN (o_subsibge=15)                         setor=3; /*construÁ„o*/
 WHEN (16<=o_subsibge<=17)                    setor=4; /*comercio*/
-WHEN (18<=o_subsibge<=23 or o_subsibge=14)  setor=5; /*servi√ßos*/
+WHEN (18<=o_subsibge<=23 or o_subsibge=14)  setor=5; /*serviÁos*/
 OTHERWISE                                     setor=.;
 END;
 
-if clt=. then nao_reemprego=1; else nao_reemprego=0; * dummy se n√£o foi reempregado;
+if clt=. then nao_reemprego=1; else nao_reemprego=0; * dummy se n„o foi reempregado;
 
-/*Dummy se reemprego √© no mesmo ano*/
+/*Dummy se reemprego È no mesmo ano*/
 if mes_adm^=. and ano2=. then m_ano=1; else m_ano=0;
-/*se for reempregado e n√£o for ano2 √© porque foi no mesmo ano*/
+/*se for reempregado e n„o for ano2 È porque foi no mesmo ano*/
 
-/*Diferen√ßa de sal√°rio*/
+/*DiferenÁa de sal·rio*/
 if rem_med_r^=. then do;
  dif_y=sum(rem_med_r,-o_rem_med); end;
 
-/**Vari√°veis do modelo OLS**/
+/**Vari·veis do modelo OLS**/
 
 /*Logaritmo da renda de re-emprego*/
  if o_rem_med=0 then o_rem_med=0.00000001;
@@ -239,27 +241,27 @@ if  rem_med_r=. then yt1=.;
 if rem_med_r=. or o_rem_med=. then yt2=.;
 	else yt2=log(rem_med_r)-log(o_rem_med);
 
-	/*Logaritmo da renda de pr√©-desligamento*/
+	/*Logaritmo da renda de prÈ-desligamento*/
 if  o_rem_med=. then yt3=.;
 	else yt3=log(o_rem_med);
 
-*Atribuindo uma Descri√ß√£o para as vari√°veis novas; /*Caxambu*/
+*Atribuindo uma DescriÁ„o para as vari·veis novas; /*Caxambu*/
 	label
-		cond_ocup="Ocupa√ß√£o de re-emprego igual ao de desligamento (2 d√≠gitos)"
+		cond_ocup="OcupaÁ„o de re-emprego igual ao de desligamento (2 dÌgitos)"
 		cond_setor="Setor de re-emprego igual ao de desligamento"
 		cond_cgc="Estabelecimento de re-emprego igual ao de desligamento"
 		cond_tam="Classe de tamanho de re-emprego igual ao de desligamento"
 		f_age="Idade"
-		f_educ="Grau de instru√ß√£o"
+		f_educ="Grau de instruÁ„o"
 		f_tempo="Tempo de emprego"
-		y="Conseguiu um novo emprego em at√© um ano"
-		educa="Grau de instru√ß√£o"
+		y="Conseguiu um novo emprego em atÈ um ano"
+		educa="Grau de instruÁ„o"
 		age="Idade"
 		age2="Idade ao quadrado"
-		gr="Grandes regi√µes"
+		gr="Grandes regiıes"
 		tff="Tempo fora do formal"
 		yt1="Log da renda de re-emprego"
-		yt2="Varia√ß√£o do log da renda"
+		yt2="VariaÁ„o do log da renda"
 		yt3="Log da renda de pre-desligamento";
 run;
 %mend year;
@@ -277,7 +279,7 @@ in8.desligados_final32004 in8.desligados_final32005;
 run;
 
 /* ACRESCENTANDO NA BASE FINAL O ACOMPANHAMENTO DOS TRABALHADORES DESLIGADOS
-AT√â AQUI TEMOS SOMENTE A OBSERVA√á√ÉO NO ANO DE DESLIGAMENTO */
+AT… AQUI TEMOS SOMENTE A OBSERVA«√O NO ANO DE DESLIGAMENTO */
 
 *Criando a varivel com pis e o_cnpj concatenados;
 %macro desligados(A);
@@ -295,7 +297,7 @@ proc sort data=in8.desligados&A; by pis_cnpj; run;
 %desligados(2002);
 %desligados(2001);
 
-*deixando s√≥ as vari√°veis de interesse e criando pis_cnpj p a base vinculos;
+*deixando sÛ as vari·veis de interesse e criando pis_cnpj p a base vinculos;
 %macro macro2(A);
 data in8.vinculos&A (keep= adm_nasc	ANO	ano_adm	causa_desli	cnae4d	cnpj	codemun	cpf	data_adm	DESLIG_MORTE	emp_3112	fx_educ	fx_idade	genero	GRAU_INSTR1	horas_contr	idade1	ind_hir	ind_sep	mes_adm	mes_deslig	nasc_CNPJ	NAT_JUR	pis	rem_dez	rem_dez_r	rem_med_r	rem_media	subs_ibge	temp_empr	tipo_adm	tipo_vinculo	uf	pis_cnpj); set in13.vinculos_nasc_morte_final&A;
 length pis_cnpj $ 29;
@@ -405,7 +407,7 @@ data in8.acompanhamento2003; set in8.acompanhamento20032002 in8.acompanhamento20
 data in8.acompanhamento2002; set in8.acompanhamento20022001 in8.acompanhamento20022000; run;
 data in8.acompanhamento2001; set in8.acompanhamento20012000; run;
 
-*Vari√°veis que iniciam com "a_" s√£o somente para as observa√ß√µes de acompanhamento;
+*Vari·veis que iniciam com "a_" s„o somente para as observaÁıes de acompanhamento;
 %macro variaveis(A);
 data in8.acompanhamento&A (drop=mes_adm mes_deslig emp_3112 original rem_dez_r fx_educ fx_idade rem_media); set in8.acompanhamento&A;
 
@@ -438,7 +440,7 @@ select;
 	otherwise;											/*ignorado*/
 end;
 
-/*categ√≥rica para tempo de emprego*/
+/*categÛrica para tempo de emprego*/
 select;
 	when (o_temp_empr<12)							    f_tempo=1; /*menos de 1 ano*/
 	when (12<=o_temp_empr<36)							f_tempo=2; /*1 a 3 anos*/
@@ -468,7 +470,7 @@ class o_cnpj;
 output out=in8.mortecnpj2 (drop=_FREQ_ _TYPE_)
 max=ano_morte_cnpj;
 run;
-*ano_morte_cnpj=. se empresa n√£o morreu no per√≠odo observado;
+*ano_morte_cnpj=. se empresa n„o morreu no perÌodo observado;
 
 proc sort data=in8.mortecnpj2;by o_cnpj;run;
 
@@ -483,7 +485,7 @@ run;
 data in8.estigma_final; set in8.estigma_final_acomp_morte;
 if acompanhamento=. and ano1=. then delete;
 
-*Tempo_ate_morte: ano de observa√ß√£o at√© o ano de morte;
+*Tempo_ate_morte: ano de observaÁ„o atÈ o ano de morte;
 tempo_ate_morte=ano_morte_cnpj-ano1;
 
 *tempo_deslig_morte: tempo entre o desligamento e a morte da empresa;
@@ -509,24 +511,24 @@ if acompanhamento=1 then o_rem_med=rem_med_r;
 run;*/
 
 data in8.estigma_final (compress=yes drop=mes_deslig2 mes_adm2 mes_adm1); set in8.estigma_final; 
-*mes_adm √© igual a mes_adm2;
-*mes_adm1 s√≥ tem 0;
-*mes_deslig √© igual a mes_deslig2;
+*mes_adm È igual a mes_adm2;
+*mes_adm1 sÛ tem 0;
+*mes_deslig È igual a mes_deslig2;
 label 
 	amostra="1 se desligado entre 2000 e 2003 de firmas que fecham em 2003, 2 se desligado entre 2000 e 2004 de firmas que fecham em 2004, e 3 para 2005"
-	desligado_morte="Dummy se o trabalhador √© desligado no ano da morte"
+	desligado_morte="Dummy se o trabalhador È desligado no ano da morte"
 	morte_periodo="Se a empresa morreu entre 2000 e 2005 (acompanhamento recebe 0)"
-	tempo_ate_morte="Tempo em anos entre a observa√ß√£o e a morte da empresa"
+	tempo_ate_morte="Tempo em anos entre a observaÁ„o e a morte da empresa"
 	ano_morte_cnpj="Ano da morte do cnpj"
 	tempo_deslig_morte="Tempo entre o desligamento e a morte da empresa (igual para o mesmo pis_cnpj)"
-	clt="Reemprego com contrato CLT indeterminado, se clt for missing √© porque n√£o foi reempregado"
-	cnae4d="CNAE 4 d√≠gitos"
+	clt="Reemprego com contrato CLT indeterminado, se clt for missing È porque n„o foi reempregado"
+	cnae4d="CNAE 4 dÌgitos"
 	cnpj="cnpj da empresa"
 	d_age="(2*age*dif)+dif**2"
-	d_temp_empr="Diferen√ßa de tempo de emprego"
+	d_temp_empr="DiferenÁa de tempo de emprego"
 	deslig_morte="Dummy se o desligamento foi por morte verdadeira da firma"
 	dif="Se a pessoa foi reempregada, quantos meses ficou fora da formalidade"
-	dif_y="Diferen√ßa de sal√°rio"
+	dif_y="DiferenÁa de sal·rio"
 	idade1="Idade no reemprego"
 	m_ano="dummy se foi reempregado no mesmo ano"
 	mov12="Original em uma empresa de tamanho 1 e reemprego em uma empresa de tamanho 2"
@@ -535,8 +537,8 @@ label
 	mov23="Original em uma empresa de tamanho 2 e reemprego em uma empresa de tamanho 3"
 	mov31="Original em uma empresa de tamanho 3 e reemprego em uma empresa de tamanho 1"
 	mov32="Original em uma empresa de tamanho 3 e reemprego em uma empresa de tamanho 2"
-	nao_reemprego="dummy se n√£o foi reempregado"
-	o_DESLIG_FIRMA="Dummy se desligamento involunt√°rio"
+	nao_reemprego="dummy se n„o foi reempregado"
+	o_DESLIG_FIRMA="Dummy se desligamento involunt·rio"
 	o_cnae="CANE da empresa original"
 	o_cnpj="CNPJ empresa original"
 	o_grau_instr1="Anos de escolaridade no emprego original"
@@ -544,31 +546,31 @@ label
 	o_nasc_cnpj="Dummmy nascimento do cnpj original"
 	o_tam="Tamanho do estabelecimento original"
 	o_tam_estab="Tamanho do estabelecimento original: 1 se 0 a 1; 2 se 10 a 99; 3 se >100"
-	r_imediato="Dummy se reemprego foi no mesmo m√™s ou no m√™s seguinte"
+	r_imediato="Dummy se reemprego foi no mesmo mÍs ou no mÍs seguinte"
 	tam="Tamanho do estabelecimento de reemprego"
 	tam_estab="Tamanho do estabelecimento de reemprego: 1 se 0 a 10; 2 se 10 a 99; 3 se >100"
-	a_ano_desligamento="Ano de desligamento das observa√ß√µes de acompanhamento"
-	ano1="Ano da observa√ß√£o (desligamento) do emprego original"
-	ano2="Ano da observa√ß√£o do reemprego"
-	emprego_medio_anual="Emprego m√©dio anual do cnpj"
+	a_ano_desligamento="Ano de desligamento das observaÁıes de acompanhamento"
+	ano1="Ano da observaÁ„o (desligamento) do emprego original"
+	ano2="Ano da observaÁ„o do reemprego"
+	emprego_medio_anual="Emprego mÈdio anual do cnpj"
 	mes=""
 	mes_adm=""
 	mes_deslig=""
 	mes_deslig1=""
-	morte_cnpj="Dummy de morte do cnpj no ano da obseva√ß√£o"
+	morte_cnpj="Dummy de morte do cnpj no ano da obsevaÁ„o"
 	o_cnae="Cnae do emprego original"
-	o_mes_adm="M√™s de admiss√£o do emprego original"
+	o_mes_adm="MÍs de admiss„o do emprego original"
 	o_mes_adm2=""
-	o_mes_deslig="M√™s de desligamento do emprego original"
+	o_mes_deslig="MÍs de desligamento do emprego original"
 	o_mes_deslig2=""
 	pis_cnpj="Pis e cnpj concatenados"
 	reemp_nasc="Dummy reemprego foi por nascimento"
-	setor="1 industria, 3 constru√ß√£o, 4 comercio e 5 servi√ßos"
+	setor="1 industria, 3 construÁ„o, 4 comercio e 5 serviÁos"
 	tam2="Tamanho do estabelecimento original: 1 se o_tam de 0 a 55; 2 se 55 a 205; 3 se 250 a 1000; e 4 se mais de 1000";
 run;
 
 /****************************************************************************************************************/
-/****************************************** Calculando as estat√≠sticas ******************************************/
+/****************************************** Calculando as estatÌsticas ******************************************/
 /****************************************************************************************************************/
 
 *ITEM i);
@@ -576,7 +578,7 @@ ods html body='\\sbsb2\disoc_rio\BMT\RAIS\Estigma\ESTATISTICA1.xls' style=minima
 
 proc means data=in8.estigma_final mean;
 var o_rem_med rem_med_r;
-where o_deslig_firma=1 and acompanhamento=.; /*desligamento involunt√°rio*/
+where o_deslig_firma=1 and acompanhamento=.; /*desligamento involunt·rio*/
 output out=estigma (drop= _freq_ _type_)
 mean=o_rem_med rem_med_r;
 run;
@@ -590,12 +592,12 @@ run;
 
 proc freq data=in8.estigma_final;
 table f_educ f_age f_tempo setor o_tam_estab gr;
-where o_deslig_firma=1; /*desligamento involunt√°rio*/
+where o_deslig_firma=1; /*desligamento involunt·rio*/
 run;
 
 proc freq data=in8.estigma_final;
 table tam2;
-where o_deslig_firma=1; /*desligamento involunt√°rio*/
+where o_deslig_firma=1; /*desligamento involunt·rio*/
 run;
 
 proc freq data=in8.estigma_final;
@@ -607,17 +609,17 @@ proc freq data=in8.estigma_final;
 table tam2;
 where o_mes_deslig=0.5 and o_morte_cnpj=1; /*desligamento por fechamento da firma*/
 run;
-proc freq data=in8.estigma_final; table nao_reemprego; where o_deslig_firma=1; run; /*desligamento involunt√°rio*/
+proc freq data=in8.estigma_final; table nao_reemprego; where o_deslig_firma=1; run; /*desligamento involunt·rio*/
 proc freq data=in8.estigma_final; table nao_reemprego; where o_mes_deslig=0.5 and o_morte_cnpj=1; run; /*desligamento por fechamento da firma*/
 
 ods html close;
 
-/*ITEM ii)restringir tamb√©m para estabelecimentos que morrem de 2000 a 2005*/
+/*ITEM ii)restringir tambÈm para estabelecimentos que morrem de 2000 a 2005*/
 ods html body='\\sbsb2\disoc_rio\BMT\RAIS\Estigma\ESTATISTICA2.xls' style=minimal ;
 
 proc means data=in8.estigma_final mean;
 var o_rem_med rem_med_r ;
-where o_deslig_firma=1 and morte_periodo=1; /*desligamento involunt√°rio*/
+where o_deslig_firma=1 and morte_periodo=1; /*desligamento involunt·rio*/
 output out=estigma (drop= _freq_ _type_)
 mean=o_rem_med rem_med_r ;
 run;
@@ -632,12 +634,12 @@ run;
 
 proc freq data=in8.estigma_final;
 table f_educ f_age f_tempo setor o_tam_estab gr;
-where o_deslig_firma=1 and morte_periodo=1; /*desligamento involunt√°rio*/
+where o_deslig_firma=1 and morte_periodo=1; /*desligamento involunt·rio*/
 run;
 
 proc freq data=in8.estigma_final;
 table tam2;
-where o_deslig_firma=1 and morte_periodo=1; /*desligamento involunt√°rio*/
+where o_deslig_firma=1 and morte_periodo=1; /*desligamento involunt·rio*/
 run;
 
 proc freq data=in8.estigma_final;
@@ -650,20 +652,20 @@ table tam2;
 where o_mes_deslig=0.5 and o_morte_cnpj=1 and morte_periodo=1; /*desligamento por fechamento da firma*/
 run;
 
-proc freq data=in8.estigma_final; table nao_reemprego; where o_deslig_firma=1 and morte_periodo=1; run; /*desligamento involunt√°rio*/
+proc freq data=in8.estigma_final; table nao_reemprego; where o_deslig_firma=1 and morte_periodo=1; run; /*desligamento involunt·rio*/
 proc freq data=in8.estigma_final; table nao_reemprego; where o_mes_deslig=0.5 and o_morte_cnpj=1 and morte_periodo=1; run; /*desligamento por fechamento da firma*/
 
 ods html close;
 
-/*ITEM iii)al√©m do filtro anterior, restringir para trabalhadores desligados no ano que os estabelecimentos aparecem pela √∫ltima
-vez (note que o trabalhador desligado em qualquer ano entre 2000 e o ano da √∫ltima apari√ß√£o entra no ii, 
-mas s√≥ entra no iii se for desligado no pr√≥prio ano da √∫ltima apari√ß√£o)*/
+/*ITEM iii)alÈm do filtro anterior, restringir para trabalhadores desligados no ano que os estabelecimentos aparecem pela ˙ltima
+vez (note que o trabalhador desligado em qualquer ano entre 2000 e o ano da ˙ltima apariÁ„o entra no ii, 
+mas sÛ entra no iii se for desligado no prÛprio ano da ˙ltima apariÁ„o)*/
 
 ods html body='\\sbsb2\disoc_rio\BMT\RAIS\Estigma\ESTATISTICA3.xls' style=minimal ;
 
 proc means data=in8.estigma_final mean;
 var o_rem_med rem_med_r ;
-where o_deslig_firma=1 and morte_periodo=1 and tempo_deslig_morte=0; /*desligamento involunt√°rio*/
+where o_deslig_firma=1 and morte_periodo=1 and tempo_deslig_morte=0; /*desligamento involunt·rio*/
 output out=estigma (drop= _freq_ _type_)
 mean=o_rem_med rem_med_r ;
 run;
@@ -678,12 +680,12 @@ run;
 
 proc freq data=in8.estigma_final;
 table f_educ f_age f_tempo setor o_tam_estab gr;
-where o_deslig_firma=1 and morte_periodo=1 and tempo_deslig_morte=0; /*desligamento involunt√°rio*/
+where o_deslig_firma=1 and morte_periodo=1 and tempo_deslig_morte=0; /*desligamento involunt·rio*/
 run;
 
 proc freq data=in8.estigma_final;
 table tam2;
-where o_deslig_firma=1 and morte_periodo=1 and tempo_deslig_morte=0; /*desligamento involunt√°rio*/
+where o_deslig_firma=1 and morte_periodo=1 and tempo_deslig_morte=0; /*desligamento involunt·rio*/
 run;
 
 proc freq data=in8.estigma_final;
@@ -696,7 +698,7 @@ table tam2;
 where o_mes_deslig=0.5 and o_morte_cnpj=1 and morte_periodo=1 and tempo_deslig_morte=0; /*desligamento por fechamento da firma*/
 run;
 
-proc freq data=in8.estigma_final; table nao_reemprego; where o_deslig_firma=1 and morte_periodo=1 and tempo_deslig_morte=0; run; /*desligamento involunt√°rio*/
+proc freq data=in8.estigma_final; table nao_reemprego; where o_deslig_firma=1 and morte_periodo=1 and tempo_deslig_morte=0; run; /*desligamento involunt·rio*/
 proc freq data=in8.estigma_final; table nao_reemprego; where o_mes_deslig=0.5 and o_morte_cnpj=1 and morte_periodo=1 and tempo_deslig_morte=0; run; /*desligamento por fechamento da firma*/
 
 ods html close;
@@ -740,7 +742,7 @@ proc freq data=in8.estigma_final; table f_educ*tempo_deslig_morte 	f_age*tempo_d
 
 
 
-*Teste para ver os casos a mais dos itens ii) e iii) em rela√ß√£o √† programa√ß√£o antiga;
+*Teste para ver os casos a mais dos itens ii) e iii) em relaÁ„o ‡ programaÁ„o antiga;
 data teste2 ; set in8.estigma_final;
 if o_mes_deslig=0.5 and o_morte_cnpj=1 and morte_periodo=1 and tempo_deslig_morte=0; /*desligamento por fechamento da firma*/
 run;
