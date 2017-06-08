@@ -2,14 +2,14 @@
 
 cd "C:\Users\b210139945\Desktop\PNAD\Pnad STATA\Sem norte rural"
 
-local anos "2008 2009 2011 2012"
+local anos "2009 2011 2012"
 foreach y in `anos' {
 
 use pesdom_`y'_stata_def,clear
 
 
-** Posição no domicílio
-recode v0401 (1=1 "chefe de família") (2=2 "cônjuge") (3=3 "filho") (4/8=4 "outro"), gen(pdom)
+** PosiÃ§Ã£o no domicÃ­lio
+recode v0401 (1=1 "chefe de famÃ­lia") (2=2 "cÃ´njuge") (3=3 "filho") (4/8=4 "outro"), gen(pdom)
 gen respons= (pdom==3)
 gen conjuge= (pdom==5)
 gen filho= (pdom==7)
@@ -46,17 +46,17 @@ replace d_acimat=1 if salmt_ndef>=teto & salmt_ndef<9999999999
 replace d_acimat=0 if salmt_ndef<teto
 
 label var educa "anos de estudo"
-label var pos_ocup "posição na ocupação"
+label var pos_ocup "posiÃ§Ã£o na ocupaÃ§Ã£o"
 label var renda2 "renda todas as fontes2"
-label var salmp "salário trab principal"
-label var salmt "salário todos trabs"
+label var salmp "salÃ¡rio trab principal"
+label var salmt "salÃ¡rio todos trabs"
 label var d_acimat "salmt acima teto RGPS"
 label var teto "teto RGPS"
-label var Nfilhos "número de filhos"
+label var Nfilhos "nÃºmero de filhos"
 label var prev "contribui prev"
 label var prev_pri "contribui prev privada"
-label var ocup_ibge "dummy ocupação"
-label var chefed "chefe do domicílio"
+label var ocup_ibge "dummy ocupaÃ§Ã£o"
+label var chefed "chefe do domicÃ­lio"
 label var def "deflator PNAD 2012"
 label var salmt_ndef "salmt valores ano corrente"
 label var rdpc "renda domiciliar per capita"
@@ -99,7 +99,7 @@ rename ativi setor_atividade
 
 
 
-** Compatibilizando variáveis de 1995 a 2012
+** Compatibilizando variÃ¡veis de 1995 a 2012
 
 replace v9060=. if v9060==9
 
